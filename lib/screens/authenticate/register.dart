@@ -1,9 +1,9 @@
-import 'package:VIRTUALDRKIT/UI/AlignCircle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:VIRTUALDRKIT/services/auth.dart';
 
 class Register extends StatefulWidget {
+  static List a = [];
   final Function toggleView;
   Register({this.toggleView});
 

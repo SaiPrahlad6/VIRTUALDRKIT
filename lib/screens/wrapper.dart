@@ -1,5 +1,6 @@
 import 'package:VIRTUALDRKIT/models/user.dart';
 import 'package:VIRTUALDRKIT/screens/authenticate/authenticate.dart';
+import 'package:VIRTUALDRKIT/screens/home/PicUpload.dart';
 import 'package:VIRTUALDRKIT/screens/home/home.dart';
 
 import 'package:flutter/material.dart';

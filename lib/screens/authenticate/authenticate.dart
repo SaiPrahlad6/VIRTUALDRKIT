@@ -14,17 +14,18 @@ class _AuthenticateState extends State<Authenticate> {
     setState(() {
       showSignIn = !showSignIn;
     });
+
   }
 
   @override
   Widget build(BuildContext context) {
     if (showSignIn) {
       return Container(
-        child: Register(toggleView: toggleView),
+        child: SignIn(toggleView: toggleView),
       );
     } else {
       return Container(
-        child: SignIn(toggleView: toggleView),
+        child: Register(toggleView: toggleView),
       );
     }
   }

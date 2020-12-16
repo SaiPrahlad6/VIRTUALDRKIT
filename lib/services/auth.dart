@@ -1,11 +1,14 @@
 import 'package:VIRTUALDRKIT/models/user.dart';
+import 'package:VIRTUALDRKIT/screens/home/PicUpload.dart';
+import 'package:VIRTUALDRKIT/services/database.dart';
+//import 'package:VIRTUALDRKIT/screens/home/records.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //Displaying user obj through a fn
-
   User _userFromFirebaseUser(FirebaseUser user) {
     return user != null ? User(uid: user.uid) : null;
   }
@@ -35,6 +38,8 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      //
+
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -49,6 +54,8 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      //File m = Image.file(doctor-full.png);
+      await DatabaseService(uid: user.uid).updateUserData('DRKIT', 'sai', 5);
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

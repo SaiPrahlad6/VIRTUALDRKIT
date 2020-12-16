@@ -4,10 +4,13 @@ import 'package:VIRTUALDRKIT/services/auth.dart';
 // ignore: unused_import
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize();
 }
 
 class MyApp extends StatelessWidget {
