@@ -17,17 +17,19 @@ class _Record2State extends State<Record2> {
   final Color orange = Color(0xfffb6900);
   List<String> imagepaths = [];
   int index = 0;
+  String image="image_picker5523976194649708810.jpg";
 
   Future<void> getFirebaseImage() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final FirebaseUser user = await _auth.currentUser();
     var ueamil = user.email;
     final StorageReference storageRef =
-        FirebaseStorage.instance.ref().child('images').child('$ueamil');
+    FirebaseStorage.instance.ref().child('images').child('$ueamil');
     //final List x =await storageRef.listAll().then((value) => value["items"]) as List;
     //print(x);
     final List<String> b = await storageRef.listAll().then((result) async {
       dynamic b = result["items"];
+      // ignore: missing_return
       LinkedHashMap a = b;
       List<String> c;
       c = new List(a.length);
@@ -107,7 +109,7 @@ class _Record2State extends State<Record2> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(30.0),
                           child: FutureBuilder(
-                            future: _getImage(context, imagepaths[index]),
+                            future: _getImage(context, image),
                             builder: (context, snapshot) {
                               //Future<List> _e = getFirebaseImageFolder();
                               //f = _e as List;
@@ -115,9 +117,9 @@ class _Record2State extends State<Record2> {
                                   ConnectionState.done)
                                 return Container(
                                   height:
-                                      MediaQuery.of(context).size.height / 1.25,
+                                  MediaQuery.of(context).size.height / 1.25,
                                   width:
-                                      MediaQuery.of(context).size.width / 1.25,
+                                  MediaQuery.of(context).size.width / 1.25,
                                   child: snapshot.data,
                                 );
 
@@ -153,7 +155,7 @@ class _Record2State extends State<Record2> {
         children: <Widget>[
           Container(
             padding:
-                const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+            const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
             margin: const EdgeInsets.only(
                 top: 30, left: 20.0, right: 20.0, bottom: 20.0),
             decoration: BoxDecoration(
@@ -166,7 +168,8 @@ class _Record2State extends State<Record2> {
                 //fetch another image
                 setState(() {
                   final _random = new Random();
-                  index = _random.nextInt(imagepaths.length);
+                  var images=imagepaths;
+                  image = images[_random.nextInt(images.length)];
                 });
               },
               child: Text(

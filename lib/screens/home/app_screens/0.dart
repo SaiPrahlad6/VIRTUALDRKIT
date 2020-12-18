@@ -11,8 +11,8 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pdf;
 import 'package:image/image.dart' as brendanImage;
 import 'package:path/path.dart' as path;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:ext_storage/ext_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MyHomePage0 extends StatelessWidget {
   String _progress = "-";
@@ -33,6 +33,7 @@ class MyHomePage0 extends StatelessWidget {
     image1 =
         PdfImage.file(doc.document, bytes: File(image.path).readAsBytesSync());
   }
+
 
   writeOnPdf() {
     doc.addPage(pdf.MultiPage(
@@ -58,40 +59,8 @@ class MyHomePage0 extends StatelessWidget {
         await DownloadsPathProvider.downloadsDirectory;
     ;
     String documentPath = documentDirectory.path;
-    File file = File("$documentPath/example.pdf");
+    File file = new File("$documentPath/example.pdf");
     file.writeAsBytesSync(doc.save());
-  }
-
-  void _downloadfile() async {
-    final dir = await _getDownloadDirectory();
-    final savepath = path.join(dir.path, "report.pdf");
-    print(savepath);
-    await _startDownload(savepath);
-  }
-
-  final Dio _dio = Dio();
-
-  Future<void> _startDownload(String savepath) async {
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
-
-    String documentPath = documentDirectory.path;
-
-    String fullPath = "$documentPath/example.pdf";
-    final response = await _dio.download(fullPath, savepath,
-        onReceiveProgress: _onReceiveProgress);
-  }
-
-  Future<Directory> _getDownloadDirectory() async {
-    if (Platform.isAndroid) {
-      return await DownloadsPathProvider.downloadsDirectory;
-    }
-    return await getApplicationDocumentsDirectory();
-  }
-
-  void _onReceiveProgress(int received, int total) {
-    if (total != -1) {
-      _progress = (received / total * 100).toStringAsFixed(0) + "%";
-    }
   }
 
   @override
@@ -100,8 +69,11 @@ class MyHomePage0 extends StatelessWidget {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       RaisedButton(
         onPressed: () async {
-          writeOnPdf();
-          await savePDF();
+          if (await Permission.storage.request().isGranted) {
+            writeOnPdf();
+            await savePDF();
+          }
+
           Directory documentDirectory =
               await DownloadsPathProvider.downloadsDirectory;
 
@@ -128,20 +100,7 @@ class MyHomePage0 extends StatelessWidget {
       ),
       SizedBox(
         height: 50.0,
-      ),
-      RaisedButton(
-        onPressed: () {
-          _downloadfile;
-        },
-        child: Text("Download prescription"),
-      ),
-      Text(
-        'Download progress:',
-      ),
-      Text(
-        '$_progress',
-        style: Theme.of(context).textTheme.display1,
-      ),
+      )
     ]));
   }
 }
