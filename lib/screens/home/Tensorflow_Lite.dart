@@ -36,7 +36,8 @@ class _DRstate extends State<DR> {
 
   loadModel() async {
     await Tflite.loadModel(
-      model: "assets/model_unquant.tflite",
+      model: "assets/drd_model.tflite",
+      //model: "assets/model_unquant.tflite",
       labels: "assets/labels.txt",
       numThreads: 1,
     );
