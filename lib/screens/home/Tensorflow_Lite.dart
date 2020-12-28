@@ -58,10 +58,12 @@ class _DRstate extends State<DR> {
         numResults: 2,
         threshold: 0.2,
         asynch: true);
+    print(output);
     setState(() {
       _loading = false;
       _outputs = output;
     });
+    return output;
   }
 
   @override
@@ -87,15 +89,22 @@ class _DRstate extends State<DR> {
       _loading = true;
       _image = image;
     });
+    var out=await classifyImage(_image);
+    String _x = out[0]["label"] as String;
+    print('the output is:'+_x);
+    var currDt = DateTime.now();
+    String imgName=currDt.day.toString()+'-'+currDt.month.toString()+'-'+currDt.year.toString()+'-'+currDt.hour.toString()+'hours-'+currDt.minute.toString()+'minutes'+_x;
+    print(imgName);
     firebaseStorageRef= FirebaseStorage.instance
         .ref()
         .child('images/$uemail')
-        .child("${randomAlphaNumeric(5)}.jpg");
+        .child(imgName+'.jpg');
+
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String downloadUrl = await (await taskSnapshot).ref.getDownloadURL();
     print(downloadUrl);
-    classifyImage(_image);
+
   }
 
   Future<void> _showChoiceDialog(BuildContext context) {
@@ -119,7 +128,6 @@ class _DRstate extends State<DR> {
                     child: Text("Camera"),
                     onTap: () {
                       _pickImage=false;
-                      //openCamera();
                       pickImage();
                     },
                   )
