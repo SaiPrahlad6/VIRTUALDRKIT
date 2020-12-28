@@ -4,6 +4,7 @@ import 'package:VIRTUALDRKIT/screens/home/Tensorflow_Lite.dart';
 import 'package:VIRTUALDRKIT/screens/home/chatbot.dart';
 import 'package:VIRTUALDRKIT/screens/home/record2.dart';
 import 'package:flutter/material.dart';
+import 'package:VIRTUALDRKIT/screens/home/records_page.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({Key key}) : super(key: key);
@@ -66,7 +67,7 @@ class MainDrawer extends StatelessWidget {
       ListTile(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Record2()));
+              context, MaterialPageRoute(builder: (context) => RecordsPage()));
         },
         leading: Icon(
           Icons.inbox,

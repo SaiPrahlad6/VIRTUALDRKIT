@@ -7,8 +7,7 @@ class FireStorageService extends ChangeNotifier {
   FireStorageService._();
   FireStorageService();
 
-  static Future<dynamic> loadFromStorage(
-      BuildContext context, String image) async {
+  static Future<dynamic> loadFromStorage(String image) async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     FirebaseUser user = await _auth.currentUser();
     String uemail = user.email;

@@ -140,17 +140,18 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // Add your onPressed code here!
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Center(child: Record2())));
-          },
-          label: Text('Records'),
-          icon: Icon(Icons.photo_library),
-          backgroundColor: Colors.pink,
-        ));
+        // floatingActionButton: FloatingActionButton.extended(
+        //   onPressed: () {
+        //     // Add your onPressed code here!
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (context) => Center(child: Record2())));
+        //   },
+        //   label: Text('Records'),
+        //   icon: Icon(Icons.photo_library),
+        //   backgroundColor: Colors.pink,
+        // )
+    );
   }
 }

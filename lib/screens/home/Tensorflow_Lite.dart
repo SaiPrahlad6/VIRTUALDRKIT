@@ -1,10 +1,12 @@
 import 'dart:io';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:random_string/random_string.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/0.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/1.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/2.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/3.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/4.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +23,11 @@ class _DRstate extends State<DR> {
   List _outputs;
   File _image;
   bool _loading = false;
+  bool _pickImage=false;
+  StorageReference firebaseStorageRef;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+
 
   @override
   void initState() {
@@ -36,8 +43,8 @@ class _DRstate extends State<DR> {
 
   loadModel() async {
     await Tflite.loadModel(
-      model: "assets/drd_model.tflite",
-      //model: "assets/model_unquant.tflite",
+      //model: "assets/drd_model.tflite",
+      model: "assets/model_unquant.tflite",
       labels: "assets/labels.txt",
       numThreads: 1,
     );
@@ -63,23 +70,31 @@ class _DRstate extends State<DR> {
     super.dispose();
   }
 
-  pickImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (image == null) return null;
-    setState(() {
-      _loading = true;
-      _image = image;
-    });
-    classifyImage(_image);
-  }
 
-  openCamera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+  pickImage() async{
+    var image;
+    if(_pickImage){
+    image=await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 512,maxHeight: 512);
+    }
+    else{
+      image = await ImagePicker.pickImage(source: ImageSource.camera,maxWidth: 512,maxHeight: 512);
+    }
+
+    final FirebaseUser user = await _auth.currentUser();
+    final String uemail=user.email;
     if (image == null) return null;
     setState(() {
       _loading = true;
       _image = image;
     });
+    firebaseStorageRef= FirebaseStorage.instance
+        .ref()
+        .child('images/$uemail')
+        .child("${randomAlphaNumeric(5)}.jpg");
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    String downloadUrl = await (await taskSnapshot).ref.getDownloadURL();
+    print(downloadUrl);
     classifyImage(_image);
   }
 
@@ -95,6 +110,7 @@ class _DRstate extends State<DR> {
                   GestureDetector(
                     child: Text("Gallery"),
                     onTap: () {
+                      _pickImage=true;
                       pickImage();
                     },
                   ),
@@ -102,7 +118,9 @@ class _DRstate extends State<DR> {
                   GestureDetector(
                     child: Text("Camera"),
                     onTap: () {
-                      openCamera();
+                      _pickImage=false;
+                      //openCamera();
+                      pickImage();
                     },
                   )
                 ],
