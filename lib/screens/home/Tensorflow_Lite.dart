@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
 class DR extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     return _DRstate();
@@ -27,6 +28,7 @@ class _DRstate extends State<DR> {
   StorageReference firebaseStorageRef;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 
   @override
@@ -43,8 +45,8 @@ class _DRstate extends State<DR> {
 
   loadModel() async {
     await Tflite.loadModel(
-      //model: "assets/drd_model.tflite",
-      model: "assets/model_unquant.tflite",
+      model: "assets/drd_model.tflite",
+      //model: "assets/model_unquant.tflite",
       labels: "assets/labels.txt",
       numThreads: 1,
     );
@@ -72,7 +74,12 @@ class _DRstate extends State<DR> {
     super.dispose();
   }
 
-
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value),
+      duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
+    ));
+  }
   pickImage() async{
     var image;
     if(_pickImage){
@@ -104,6 +111,7 @@ class _DRstate extends State<DR> {
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String downloadUrl = await (await taskSnapshot).ref.getDownloadURL();
     print(downloadUrl);
+    showInSnackBar("Image Uploaded to storage");
 
   }
 
@@ -129,6 +137,7 @@ class _DRstate extends State<DR> {
                     onTap: () {
                       _pickImage=false;
                       pickImage();
+
                     },
                   )
                 ],
@@ -141,6 +150,7 @@ class _DRstate extends State<DR> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         centerTitle: true,
