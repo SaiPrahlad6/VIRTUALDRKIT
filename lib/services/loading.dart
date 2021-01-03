@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.cyan,
+        color: cColors.loadingColor,
         child: Padding(
             padding: EdgeInsets.symmetric(vertical: 280.0, horizontal: 50.0),
             child: Center(

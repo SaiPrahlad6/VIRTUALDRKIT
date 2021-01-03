@@ -1,4 +1,4 @@
-import 'package:VIRTUALDRKIT/models/user.dart';
+import 'file:///C:/Users/msidd/Desktop/projects/VIRTUALDRKIT/lib/services/user.dart';
 import 'package:VIRTUALDRKIT/screens/wrapper.dart';
 import 'package:VIRTUALDRKIT/services/auth.dart';
 // ignore: unused_import

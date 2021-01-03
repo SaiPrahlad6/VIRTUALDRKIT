@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
-
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 class ChatBot extends StatefulWidget {
   @override
   _ChatBotState createState() => _ChatBotState();
@@ -33,7 +33,7 @@ class _ChatBotState extends State<ChatBot> {
         title: Text(
           "Help Desk",
         ),
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: cColors.appbarColor,
       ),
       body: Container(
         child: Column(

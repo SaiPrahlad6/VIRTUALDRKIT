@@ -1,12 +1,16 @@
-import 'package:VIRTUALDRKIT/models/user.dart';
-import 'package:VIRTUALDRKIT/screens/home/PicUpload.dart';
+import 'file:///C:/Users/msidd/Desktop/projects/VIRTUALDRKIT/lib/services/user.dart';
+import 'package:VIRTUALDRKIT/screens/home/profile_page.dart';
 import 'package:VIRTUALDRKIT/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:VIRTUALDRKIT/screens/home/records.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _db = Firestore.instance;
 
   //Displaying user obj through a fn
   User _userFromFirebaseUser(FirebaseUser user) {
@@ -17,18 +21,6 @@ class AuthService {
 
   Stream<User> get user {
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
-  }
-  //sign in anonymus way
-
-  Future signInAnon() async {
-    try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
   }
 
   //email and pasword
@@ -49,19 +41,35 @@ class AuthService {
 
   //register for email and password
 
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword(String name,String email, String password,) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
       //File m = Image.file(doctor-full.png);
-      await DatabaseService(uid: user.uid).updateUserData('DRKIT', 'sai', 5);
+      await DatabaseService(uid: user.uid).updateUserData(name,email,user.uid.toString(),'null');
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
       return null;
     }
   }
+
+
+   init() async {
+    cUser.userRef = _db.collection('users').document((await FirebaseAuth.instance.currentUser()).uid);
+    DocumentSnapshot ds= await cUser.userRef.get();
+    var mp=ds.data;
+    cUser.email=mp['email'];
+    cUser.displayName=mp['name'];
+    cUser.photoURL=mp['photoURL'];
+    cUser.uid=mp['uid'];
+    print(mp);
+    cUser.storageRef= FirebaseStorage.instance.ref();
+    print("user details initiated");
+  }
+
+
 
   //sign out
   Future signOut() async {
@@ -73,3 +81,4 @@ class AuthService {
     }
   }
 }
+final AuthService _authService =new AuthService();

@@ -1,14 +1,12 @@
-import 'package:VIRTUALDRKIT/screens/home/PicUpload.dart';
-import 'package:VIRTUALDRKIT/screens/home/Tensorflow.dart';
-import 'package:VIRTUALDRKIT/screens/home/Tensorflow_Lite.dart';
+import 'package:VIRTUALDRKIT/screens/home/profile_page.dart';
 import 'package:VIRTUALDRKIT/screens/home/chatbot.dart';
-import 'package:VIRTUALDRKIT/screens/home/record2.dart';
+import 'package:VIRTUALDRKIT/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:VIRTUALDRKIT/screens/home/records_page.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({Key key}) : super(key: key);
-
+  MainDrawer({Key key}) : super(key: key);
+  final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -89,15 +87,14 @@ class MainDrawer extends StatelessWidget {
       ),
 
       ListTile(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Tensor()));
+        onTap: () async {
+          await _auth.signOut();
         },
         leading: Icon(
-          Icons.settings,
+          Icons.logout,
           color: Colors.black,
         ),
-        title: Text("TEST"),
+        title: Text("Logout"),
       ),
     ]);
   }

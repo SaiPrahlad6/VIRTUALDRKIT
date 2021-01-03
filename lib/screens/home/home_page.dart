@@ -1,11 +1,11 @@
-import 'package:VIRTUALDRKIT/models/user.dart';
+import 'file:///C:/Users/msidd/Desktop/projects/VIRTUALDRKIT/lib/services/user.dart';
 import 'package:VIRTUALDRKIT/screens/authenticate/sign_in.dart';
-import 'package:VIRTUALDRKIT/screens/home/MainDrawer.dart';
-import 'package:VIRTUALDRKIT/screens/home/PicUpload.dart';
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
+import 'package:VIRTUALDRKIT/screens/home/nav_drawer.dart';
+import 'package:VIRTUALDRKIT/screens/home/profile_page.dart';
 import 'package:VIRTUALDRKIT/services/auth.dart';
-// ignore: unused_import
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'tensorflow_testing.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -16,21 +16,30 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _auth.init();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[300],
+      backgroundColor:cColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.purple[100],
+        backgroundColor: cColors.appbarColor,
         title: Text('DR KIT'),
         elevation: 0.0,
         actions: [
           FlatButton.icon(
-              onPressed: () async {
-                await _auth.signOut();
+              onPressed: () {
+       Navigator.push(
+           context, MaterialPageRoute(builder: (context) => Tensor()));
               },
-              icon: Icon(Icons.person),
-              label: Text('Logout'))
+              icon: Icon(Icons.settings),
+              label: Text('Test'))
         ],
       ),
       drawer: Drawer(
@@ -47,7 +56,7 @@ class _HomeState extends State<Home> {
         },
         label: Text('Profile'),
         icon: Icon(Icons.photo_library),
-        backgroundColor: Colors.pink,
+        backgroundColor: cColors.buttonColor,
       ),
     );
   }
