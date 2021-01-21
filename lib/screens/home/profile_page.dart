@@ -1,16 +1,12 @@
-import 'package:VIRTUALDRKIT/screens/authenticate/sign_in.dart';
-//import 'package:VIRTUALDRKIT/screens/home/records.dart';
-import 'package:VIRTUALDRKIT/screens/home/wallet.dart';
-import 'package:VIRTUALDRKIT/services/auth.dart';
+import 'package:VIRTUALDRKIT/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:VIRTUALDRKIT/screens/home/record2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:path/path.dart';
-//import 'package:VIRTUALDRKIT/screens/authenticate/sign_in.dart';
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -32,40 +28,40 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
 
-    //final List<dynamic> a = [];
     Future uploadPic(BuildContext context) async {
-      final FirebaseAuth _auth = FirebaseAuth.instance;
-
-      final FirebaseUser user = await _auth.currentUser();
-      final uid = user.uid;
+      final uid = cUser.uid;
       // Similarly we can get email as well
-      final String uemail = user.email;
+      final String uemail = cUser.email;
       print(uid);
       print(uemail);
-      final String fileName = basename(_image.path);
+    //  final String fileName = basename(_image.path);
       StorageReference firebaseStorageRef = FirebaseStorage.instance
           .ref()
-          .child('images/$uemail')
-          .child(fileName);
-      //SignIn.a.add(fileName);
-      //print(SignIn.a);
+          .child('profilepictures/$uemail')
+          .child(cUser.uid);
       StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
       StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+      var downloadUrl = await (await taskSnapshot).ref.getDownloadURL();
+      await DatabaseService().updateUserData(cUser.displayName, cUser.email, cUser.uid, downloadUrl);
       setState(() {
+        cUser.photoURL=downloadUrl;
         print("Profile Picture uploaded");
         Scaffold.of(context)
             .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
       });
     }
 
+
     return Scaffold(
+      backgroundColor: cColors.backgroundColor,
         appBar: AppBar(
+          backgroundColor: cColors.appbarColor,
           leading: IconButton(
               icon: Icon(FontAwesomeIcons.arrowLeft),
               onPressed: () {
                 Navigator.pop(context);
               }),
-          title: Text('Image'),
+          title: Text('Profile'),
         ),
         body: Builder(
           builder: (context) => Center(
@@ -94,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       fit: BoxFit.fill,
                                     )
                                   : Image.network(
-                                      "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                                     cUser.photoURL,
                                       fit: BoxFit.fill,
                                     ),
                             ),
@@ -129,29 +125,40 @@ class _ProfilePageState extends State<ProfilePage> {
                         elevation: 4.0,
                         splashColor: Colors.blueGrey,
                         child: Text(
-                          'Submit',
+                          'Update',
                           style: TextStyle(color: Colors.white, fontSize: 16.0),
                         ),
                       ),
                     ],
-                  )
+                  ),
+                  SizedBox(height: 30,),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                    Text(
+                      "Name: ",
+                      style: TextStyle(fontSize: 20, color: Colors.yellow[900]),
+                    ),
+                    Text(
+                      cUser.displayName,
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ]),
+                  SizedBox(height: 30,),
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                    Text(
+                      "Email: ",
+                      style: TextStyle(fontSize: 20, color: Colors.yellow[900]),
+                    ),
+                    Text(
+                      cUser.email,
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ]),
+
                 ],
               ),
             ),
           ),
         ),
-        // floatingActionButton: FloatingActionButton.extended(
-        //   onPressed: () {
-        //     // Add your onPressed code here!
-        //     Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (context) => Center(child: Record2())));
-        //   },
-        //   label: Text('Records'),
-        //   icon: Icon(Icons.photo_library),
-        //   backgroundColor: Colors.pink,
-        // )
     );
   }
 }

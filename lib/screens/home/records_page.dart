@@ -1,13 +1,13 @@
 import 'dart:collection';
 
-import 'package:VIRTUALDRKIT/plugins/mobile_storage.dart';
-import 'package:VIRTUALDRKIT/shared/loading.dart';
+import 'file:///C:/Users/msidd/Desktop/projects/VIRTUALDRKIT/lib/services/mobile_storage.dart';
+import 'file:///C:/Users/msidd/Desktop/projects/VIRTUALDRKIT/lib/services/loading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 class RecordsPage extends StatefulWidget {
   @override
   _RecordsPageState createState() => _RecordsPageState();
@@ -21,10 +21,8 @@ class _RecordsPageState extends State<RecordsPage> {
 
  getFirebaseImage() async {
    List<String> c;
-   final FirebaseAuth _auth = FirebaseAuth.instance;
-   final FirebaseUser user = await _auth.currentUser();
-   var ueamil = user.email;
-   final StorageReference storageRef = FirebaseStorage.instance.ref().child('images').child('$ueamil');
+   var ueamil =cUser.email;
+   final StorageReference storageRef = cUser.storageRef.child('images').child('$ueamil');
   dynamic listmp=await storageRef.listAll();
   print(listmp);
    LinkedHashMap allmap=listmp["items"];
@@ -68,11 +66,12 @@ setState(() {
           Scaffold(
            appBar: AppBar(
              title:Text("Your Inbox (History)"),
+             backgroundColor: cColors.appbarColor,
            ),
             body: _isready?
                 Loading():
             Container(
-              color: Colors.cyan,
+              color: cColors.appbarColor,
               //margin:EdgeInsets.symmetric(horizontal: 10),
               child: ListView.builder(
                 itemCount: (imagePaths.length),
@@ -81,7 +80,7 @@ setState(() {
 
                     margin: EdgeInsets.only(bottom: 10,top:10,right: 10,left: 10 ),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
-                      color: Colors.orangeAccent,),
+                      color: cColors.buttonColor,),
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       children: [

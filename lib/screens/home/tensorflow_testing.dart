@@ -1,16 +1,31 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:random_string/random_string.dart';
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/0.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/1.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/2.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/3.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/4.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
+
+class Tensor extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      title: "Tensorflow",
+      home: DR(),
+    );
+  }
+
+}
+
+
+
 
 class DR extends StatefulWidget {
 
@@ -77,7 +92,7 @@ class _DRstate extends State<DR> {
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value),
       duration: Duration(seconds: 3),
-        backgroundColor: Colors.red,
+        backgroundColor: cColors.buttonColor,
     ));
   }
   pickImage() async{
@@ -158,7 +173,7 @@ class _DRstate extends State<DR> {
           "Welcome To DR Test Zone",
           style: TextStyle(color: Colors.white, fontSize: 25),
         ),
-        backgroundColor: Colors.amber,
+        backgroundColor: cColors.appbarColor,
         elevation: 0,
       ),
       body: Container(
@@ -300,7 +315,7 @@ class _DRstate extends State<DR> {
                 size: 20,
                 color: Colors.white,
               ),
-              color: Colors.amber,
+              color: cColors.buttonColor,
             ),
           ],
         ),

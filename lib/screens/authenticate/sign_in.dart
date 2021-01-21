@@ -1,8 +1,9 @@
 import 'package:VIRTUALDRKIT/services/auth.dart';
-import 'package:VIRTUALDRKIT/shared/loading.dart';
+import 'file:///C:/Users/msidd/Desktop/projects/VIRTUALDRKIT/lib/services/loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -20,6 +21,7 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   String error = '';
+  String name = '';
   bool loading = false;
 
   @override
@@ -30,11 +32,11 @@ class _SignInState extends State<SignIn> {
             //backgroundColor: Colors.brown[100],
             resizeToAvoidBottomPadding: false,
             appBar: AppBar(
-              //backgroundColor: Colors.brown[400],
+              backgroundColor: cColors.appbarColor,
               elevation: 0.0,
               title: Text(
                 'VIRTUAL DR KIT',
-                style: TextStyle(color: Colors.indigo),
+                style: TextStyle(color: cColors.buttonColor),
               ),
               actions: [
                 FlatButton.icon(
@@ -58,11 +60,13 @@ class _SignInState extends State<SignIn> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
+
+
                         SizedBox(height: 20.0),
                         TextFormField(
                           decoration: InputDecoration(
                               prefixIcon:
-                                  Icon(Icons.email, color: Colors.purple),
+                              Icon(Icons.email, color: Colors.purple),
                               hintText: 'Email',
                               fillColor: Colors.white,
                               filled: true,
@@ -87,11 +91,12 @@ class _SignInState extends State<SignIn> {
                                     bottomLeft: Radius.circular(10.0)),
                               )),
                           validator: (val) =>
-                              val.isEmpty ? 'Enter an email' : null,
+                          val.isEmpty ? 'Enter an email' : null,
                           onChanged: (val) {
                             setState(() => email = val);
                           },
                         ),
+
                         SizedBox(height: 20.0),
                         TextFormField(
                           decoration: InputDecoration(
