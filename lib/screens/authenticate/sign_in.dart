@@ -30,7 +30,7 @@ class _SignInState extends State<SignIn> {
         ? Loading()
         : Scaffold(
             //backgroundColor: Colors.brown[100],
-            resizeToAvoidBottomPadding: false,
+            //resizeToAvoidBottomPadding: false,
             appBar: AppBar(
               backgroundColor: cColors.appbarColor,
               elevation: 0.0,

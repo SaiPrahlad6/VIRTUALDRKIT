@@ -5,6 +5,7 @@ import 'package:VIRTUALDRKIT/screens/home/app_screens/1.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/2.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/3.dart';
 import 'package:VIRTUALDRKIT/screens/home/app_screens/4.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -122,10 +123,20 @@ class _DRstate extends State<DR> {
         .child('images/$uemail')
         .child(imgName+'.jpg');
 
+
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String downloadUrl = await (await taskSnapshot).ref.getDownloadURL();
     print(downloadUrl);
+
+    CollectionReference record = Firestore.instance.collection("users").document(user.uid).collection("records").reference();
+    await record.add(
+        {'dr_level':_x,
+    'photoUrl':downloadUrl,
+      'date_and_time':currDt.day.toString()+'-'+currDt.month.toString()+'-'+currDt.year.toString()+'-'+currDt.hour.toString()+'hours-'+currDt.minute.toString()+'minutes',
+    }
+    );
+
     showInSnackBar("Image Uploaded to storage");
 
   }
@@ -166,7 +177,7 @@ class _DRstate extends State<DR> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
+
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -251,7 +262,7 @@ class _DRstate extends State<DR> {
                                       break;
                                     case 1:
                                       {
-                                        debugPrint("GeeksforGeeks number 1");
+                                        debugPrint("1");
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -261,7 +272,7 @@ class _DRstate extends State<DR> {
                                       break;
                                     case 2:
                                       {
-                                        debugPrint("GeeksforGeeks number 2");
+                                        debugPrint("2");
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -271,7 +282,7 @@ class _DRstate extends State<DR> {
                                       break;
                                     case 3:
                                       {
-                                        debugPrint("GeeksforGeeks number 3");
+                                        debugPrint("3");
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -281,7 +292,7 @@ class _DRstate extends State<DR> {
                                       break;
                                     case 4:
                                       {
-                                        debugPrint("GeeksforGeeks number 4");
+                                        debugPrint("4");
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(

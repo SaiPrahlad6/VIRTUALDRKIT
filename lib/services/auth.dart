@@ -23,7 +23,7 @@ class AuthService {
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
   }
 
-  //email and pasword
+  //email and password
 
   Future signInWithEmailAndPassword(String email, String password) async {
     try {

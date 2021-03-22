@@ -2,7 +2,9 @@ import 'package:VIRTUALDRKIT/screens/home/profile_page.dart';
 import 'package:VIRTUALDRKIT/screens/home/chatbot.dart';
 import 'package:VIRTUALDRKIT/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:VIRTUALDRKIT/screens/home/records_page.dart';
+import 'package:VIRTUALDRKIT/screens/home/records_page_old.dart';
+
+import 'records_page.dart';
 
 class MainDrawer extends StatelessWidget {
   MainDrawer({Key key}) : super(key: key);
@@ -71,7 +73,7 @@ class MainDrawer extends StatelessWidget {
           Icons.inbox,
           color: Colors.black,
         ),
-        title: Text("Your Inbox"),
+        title: Text("Your Records"),
       ),
 
       ListTile(

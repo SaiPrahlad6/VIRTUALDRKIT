@@ -1,4 +1,4 @@
-import 'file:///C:/Users/msidd/Desktop/projects/VIRTUALDRKIT/lib/services/user.dart';
+
 import 'package:VIRTUALDRKIT/screens/authenticate/sign_in.dart';
 import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
 import 'package:VIRTUALDRKIT/screens/home/nav_drawer.dart';
@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
         title: Text('DR KIT'),
         elevation: 0.0,
         actions: [
-          FlatButton.icon(
+          TextButton.icon(
               onPressed: () {
        Navigator.push(
            context, MaterialPageRoute(builder: (context) => Tensor()));
@@ -84,7 +84,8 @@ class _HomeState extends State<Home> {
                 SizedBox(height: 20,),
 
                 Container(
-                  child: Row(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
                     children: <Widget>[
 
 
@@ -137,7 +138,7 @@ Container(
 
 
                 SizedBox(
-                  height: MediaQuery.of(context).size.height*0.40,
+                  height: MediaQuery.of(context).size.height*0.50,
 
                   child: ListView(
                     padding: EdgeInsets.all(padd),
@@ -152,7 +153,7 @@ Container(
                   )
                 ),
 
-                SizedBox(width: padd,),
+              //  SizedBox(width: padd,),
               ]
           )
       ),
@@ -164,8 +165,8 @@ Container(
 
 
   Container slide(String title,String imgurl,String level,Color redlevel) {
-   var boxheight=20.0;
-   var descheight=200.0;
+   var boxheight=40.0;
+   var descheight=300.0;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2),
       margin: EdgeInsets.only(bottom: 7.5),
