@@ -15,8 +15,8 @@ xmlns:tools="http://schemas.android.com/tools"
     <application
      
         android:name="io.flutter.app.FlutterApplication"
-        android:label="VIRTUALDRKIT"
-        android:icon="@mipmap/ic_launcher"
+        android:label="Virtual\nDR-Kit"
+        android:icon="@mipmap/dr_icon"
         android:requestLegacyExternalStorage="true"
         >
         <activity

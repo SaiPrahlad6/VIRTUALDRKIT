@@ -1,16 +1,19 @@
 import 'dart:io';
 import 'package:VIRTUALDRKIT/screens/authenticate/static_components.dart';
-import 'package:VIRTUALDRKIT/screens/home/app_screens/0.dart';
-import 'package:VIRTUALDRKIT/screens/home/app_screens/1.dart';
-import 'package:VIRTUALDRKIT/screens/home/app_screens/2.dart';
-import 'package:VIRTUALDRKIT/screens/home/app_screens/3.dart';
-import 'package:VIRTUALDRKIT/screens/home/app_screens/4.dart';
+import 'package:VIRTUALDRKIT/screens/home/pdf_preview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pdf;
+import 'package:image/image.dart' as brendanImage;
+import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share/share.dart';
 import 'package:tflite/tflite.dart';
 
 class Tensor extends StatelessWidget{
@@ -37,10 +40,25 @@ class DR extends StatefulWidget {
 }
 
 class _DRstate extends State<DR> {
+  final doc = pdf.Document();
   List _outputs;
+  int level;
   File _image;
   bool _loading = false;
   bool _pickImage=false;
+  String imgName;
+  final heading = "DR Prescription Data";
+  PdfImage pdfimage;
+  List<String> descLevel=[
+    "You are free from DR",
+    "You are free from DR",
+    "You are free from DR",
+    "You are free from DR",
+    "You are free from DR",
+  ];
+  String description;
+  String fullpath="null";
+
   StorageReference firebaseStorageRef;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -116,7 +134,7 @@ class _DRstate extends State<DR> {
     String _x = out[0]["label"] as String;
     print('the output is:'+_x);
     var currDt = DateTime.now();
-    String imgName=currDt.day.toString()+'-'+currDt.month.toString()+'-'+currDt.year.toString()+'-'+currDt.hour.toString()+'hours-'+currDt.minute.toString()+'minutes'+_x;
+    imgName=currDt.day.toString()+'-'+currDt.month.toString()+'-'+currDt.year.toString()+'-'+currDt.hour.toString()+'hr-'+currDt.minute.toString()+'min'+_x;
     print(imgName);
     firebaseStorageRef= FirebaseStorage.instance
         .ref()
@@ -133,7 +151,7 @@ class _DRstate extends State<DR> {
     await record.add(
         {'dr_level':_x,
     'photoUrl':downloadUrl,
-      'date_and_time':currDt.day.toString()+'-'+currDt.month.toString()+'-'+currDt.year.toString()+'-'+currDt.hour.toString()+'hours-'+currDt.minute.toString()+'minutes',
+      'date_and_time':currDt.day.toString()+'-'+currDt.month.toString()+'-'+currDt.year.toString()+'-'+currDt.hour.toString()+'hr-'+currDt.minute.toString()+'min',
     }
     );
 
@@ -233,84 +251,85 @@ class _DRstate extends State<DR> {
                         ),
                         _image == null
                             ? Container()
-                            : RaisedButton(
-                                onPressed: () {
-                                  //writeOnPdf();
-                                  //await savePDF();
-                                  //MyHomePage();
-                                  String _x = _outputs[0]["label"] as String;
-                                  int _answer;
-                                  _answer = int.parse(_x);
-                                  String one = "1";
-                                  String zero = "0";
-                                  String two = "2";
-                                  String three = "3";
-                                  String four = "4";
-                                  debugPrint("Dtype clicked");
-                                  //debugPrint(_outputs[0]["label"].runtimeType);
-                                  debugPrint(_x);
-                                  switch (_answer) {
-                                    case 0:
-                                      {
-                                        debugPrint("0");
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MyHomePage0(_image)));
+                            : Row(
+                              children: [
+                                RaisedButton(
+                                    onPressed: () async {
+                                      //writeOnPdf();
+                                      //await savePDF();
+                                      //MyHomePage();
+                                      String _x = _outputs[0]["label"] as String;
+                                      level = int.parse(_x);
+                                      debugPrint("Dtype clicked");
+                                      debugPrint(_x);
+                                      description="Your DR level :"+level.toString()+". "+descLevel[level];
+                                      if (await Permission.storage.request().isGranted) {
+                                        pdfimage = PdfImage.file(doc.document, bytes: File(_image.path).readAsBytesSync());
+                                        writeOnPdf(heading,pdfimage,description);
+                                        await savePDF().then((path) => {
+                                          fullpath=path,
+                                         print("Yes"),
+                                          print(path),
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context)=>
+                                        PdfPreviewScreen(path)
+                                        )
+                                        ),
+                                        }
+                                        );
+
+
                                       }
-                                      break;
-                                    case 1:
-                                      {
-                                        debugPrint("1");
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MyHomePage(_image)));
-                                      }
-                                      break;
-                                    case 2:
-                                      {
-                                        debugPrint("2");
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MyHomePage2(_image)));
-                                      }
-                                      break;
-                                    case 3:
-                                      {
-                                        debugPrint("3");
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MyHomePage3(_image)));
-                                      }
-                                      break;
-                                    case 4:
-                                      {
-                                        debugPrint("4");
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MyHomePage4(_image)));
-                                      }
-                                      break;
-                                    default:
-                                      {
-                                        debugPrint("This is default case");
-                                      }
-                                      break;
-                                  }
-                                },
-                                padding: const EdgeInsets.all(0.0),
-                                color: Colors.greenAccent,
-                                child: Text("Generate Prescription"),
-                              )
+
+
+                                    },
+                                    padding: const EdgeInsets.all(0.0),
+                                    color: Colors.greenAccent,
+                                    child: Text("Generate Prescription"),
+                                  ),
+
+
+//sharing
+                              SizedBox(width: 20),
+
+                        RaisedButton(
+                          child: Icon(Icons.share),
+                          color: Colors.amber,
+                          onPressed: () async {
+
+                            String _x = _outputs[0]["label"] as String;
+
+                            level = int.parse(_x);
+                            debugPrint("Dtype clicked");
+                            debugPrint(_x);
+
+                            debugPrint("hello");
+
+                            if(fullpath=="null"){
+                              description="Your DR level :"+level.toString()+"."+descLevel[level];
+                              if (await Permission.storage.request().isGranted) {
+
+                                pdfimage = PdfImage.file(doc.document, bytes: File(_image.path).readAsBytesSync());
+                                writeOnPdf(heading,pdfimage,description);
+                                await savePDF().then((path) => {
+                                  fullpath=path,
+                                  print("Yes"),
+                                  print(path),
+                                Share.shareFiles(path.split(" "),text: "Example pdf"),
+                                }
+                                );
+
+
+                              }
+                            }
+
+
+                          },
+                        ),
+
+                              ],
+                        ),
+
                       ],
                     ),
                   ),
@@ -331,6 +350,45 @@ class _DRstate extends State<DR> {
           ],
         ),
       ),
+    );
+  }
+
+
+
+  Future<String> savePDF() async {
+    Directory documentDirectory = await DownloadsPathProvider.downloadsDirectory;;
+    String documentPath = documentDirectory.path;
+    String pdfpath= documentPath+"/"+cUser.displayName+"_"+imgName+"_"+level.toString()+".pdf";
+    File file = new File(pdfpath);
+
+    file.writeAsBytesSync(doc.save());
+    print("save completed and the path is:"+ pdfpath);
+    return pdfpath;
+  }
+
+
+  writeOnPdf(heading,PdfImage image,description) {
+    doc.addPage(
+        pdf.MultiPage(
+        pageFormat: PdfPageFormat.a5,
+        margin: pdf.EdgeInsets.all(32),
+        build: (pdf.Context context)
+        {
+          return <pdf.Widget>
+          [
+            pdf.Center(
+                child: pdf.Text(heading,
+                    textAlign: pdf.TextAlign.center,
+                    style: pdf.TextStyle(fontSize: 16.0))),
+            pdf.SizedBox(height: 30.0),
+            pdf.Image(image),
+            pdf.Text(description,
+                textAlign: pdf.TextAlign.left,
+                style: pdf.TextStyle(fontSize: 15.0)
+            ),
+          ];
+        }
+        )
     );
   }
 }

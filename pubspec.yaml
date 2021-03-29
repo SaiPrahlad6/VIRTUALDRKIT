@@ -48,6 +48,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   flutter_downloader: ^1.5.2
   dio: ^3.0.10
+  share: ^0.6.5+4
   downloads_path_provider_28: ^0.1.0
   open_file: ^3.0.3
   flutter_local_notifications: ^3.0.1+6
